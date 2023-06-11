@@ -6,7 +6,25 @@ Laravel activity log requires laravel 8 or higher and php 8.0+
 
 ```
 
-            composer require kuncen/audittrails:dev-main
+composer require kuncen/audittrails:dev-main
+
+```
+
+Then add this to app/config
+```
+ 'providers' => ServiceProvider::defaultProviders()->merge([
+
+        /*
+         * Package Service Providers...
+         */
+
+        /*
+         * Application Service Providers...
+         */
+         ...
+         ...
+         Kuncen\Audittrails\AudittrailsServiceProvider::class,
+ ])->toArray(),
 
 ```
 
@@ -15,8 +33,7 @@ Laravel activity log requires laravel 8 or higher and php 8.0+
 After installing the activity log you must publish its config using command:
 
 ```
-
-            php artisan vendor:publish --provider="Kuncen\Audittrails\AudittrailsServiceProvider"
+php artisan vendor:publish --provider="Kuncen\Audittrails\AudittrailsServiceProvider"
 
 ```
 
@@ -24,6 +41,7 @@ After that activity log will create the table on your application to store trans
 
 ```
 php artisan migrate
+
 ```
 
 #### Usage
@@ -32,16 +50,16 @@ This package automatically save all transactional activity like save, update, de
 
 ```
 
-            use Laravel\Sanctum\HasApiTokens;
-            use Kuncen\Audittrails\LogTransaction;
-            use Illuminate\Notifications\Notifiable;
-            use Illuminate\Database\Eloquent\Factories\HasFactory;
-            use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use Kuncen\Audittrails\LogTransaction;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-            class User extends Authenticatable
-            {
-                use HasApiTokens, HasFactory, Notifiable, LogTransaction;
-            }
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable, LogTransaction;
+}
 
 ```
 
