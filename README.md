@@ -10,7 +10,7 @@ composer require kuncen/audittrails:dev-main
 
 ```
 
-Then add this to app/config
+Then add Kuncen\Audittrails\AudittrailsServiceProvider::class to app/config
 ```
  'providers' => ServiceProvider::defaultProviders()->merge([
 
