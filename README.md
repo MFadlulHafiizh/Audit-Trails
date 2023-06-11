@@ -6,7 +6,7 @@ Laravel activity log requires laravel 8 or higher and php 8.0+
 
 ```
 
-            composer require kuncen/audittrails
+            composer require kuncen/audittrails:dev-main
 
 ```
 
