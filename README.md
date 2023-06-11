@@ -1,6 +1,6 @@
 # Laravel Activity Log Documentation
 
-#### Installation
+## Installation
 
 Laravel activity log requires laravel 8 or higher and php 8.0+
 
@@ -27,7 +27,7 @@ Then add Kuncen\Audittrails\AudittrailsServiceProvider::class to app/config
 
 ```
 
-#### Configuration
+## Configuration
 
 After installing the activity log you must publish its config using command:
 
@@ -41,7 +41,7 @@ After that activity log will create the table on your application to store trans
 php artisan migrate
 ```
 
-#### Usage
+## Usage
 
 This package automatically save all transactional activity like save, update, delete, login and logout. But before use, you must add LogTransaction trait on your Models like this
 
