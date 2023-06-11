@@ -79,10 +79,10 @@ If you want all transactional in your application to be recorded as entering a m
 
 ```
 
-            setActivityLog("
-                description about this function/page/menu (opsional default is null)",
+            setActivityLog(
+                "description about this function/page/menu (opsional default is null)",
                 user id (opsional if you need user identity for your function default is null),
-                http method (opsional by default http method is GET)
+                http method (opsional by default http method is "GET")
             );
 
 ```
