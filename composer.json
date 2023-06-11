@@ -21,7 +21,7 @@
             "email": "rrkuncen@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": "^8.0",
         "illuminate/auth": "^7.30.4|^8.40.0|^9.0|^10.0",
