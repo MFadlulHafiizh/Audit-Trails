@@ -12,7 +12,7 @@ if (! function_exists('setActivityLog')) {
         $authenticationLog->ip_address = request()->url();
         $authenticationLog->waktu = Carbon::now();
         $authenticationLog->url = request()->url();
-        $authenticationLog->keterangan = $keterangan;
+        $authenticationLog->keterangan = $description;
         $authenticationLog->user_agent = $_SERVER['HTTP_USER_AGENT'];
         $authenticationLog->save();
     }
