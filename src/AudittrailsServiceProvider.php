@@ -2,6 +2,7 @@
 
 namespace Kuncen\Audittrails;
 
+use Console\ClearCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -21,11 +22,11 @@ class AudittrailsServiceProvider extends ServiceProvider
     ];
     public function register(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                Console\ClearCommand::class,
-            ]);
-        }
+        // if ($this->app->runningInConsole()) {
+        //     $this->commands([
+        //         ClearCommand::class,
+        //     ]);
+        // }
     }
     protected function registerEvents()
     {
