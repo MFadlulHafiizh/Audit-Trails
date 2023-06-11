@@ -1,0 +1,33 @@
+{
+    "name": "kuncen/audittrails",
+    "description": "Log jejak audit transaksional data pada aplikasi laravel",
+    "keywords": [
+        "laravel",
+        "authentication",
+        "log",
+        "audit trail",
+        "transaction Log"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kuncen\\Audittrails\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Fadlul Hafiizh",
+            "email": "rrkuncen@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/auth": "^7.30.4|^8.40.0|^9.0|^10.0",
+        "illuminate/bus": "^7.30.4|^8.40.0|^9.0|^10.0",
+        "illuminate/console": "^7.30.4|^8.40.0|^9.0|^10.0",
+        "illuminate/contracts": "^7.30.4|^8.40.0|^9.0|^10.0",
+        "illuminate/database": "^7.30.4|^8.40.0|^9.0|^10.0",
+        "illuminate/http": "^7.30.4|^8.40.0|^9.0|^10.0"
+    }
+}
