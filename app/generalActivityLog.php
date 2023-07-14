@@ -9,7 +9,7 @@ if (! function_exists('setActivityLog')) {
         $authenticationLog = new ActivityLog;
         $authenticationLog->users_id = $custom_user_id ?? @Auth::user()->id;
         $authenticationLog->jenis_tindakan = $httpMethod ?? "READ";
-        $authenticationLog->ip_address = request()->url();
+        $authenticationLog->ip_address = request()->ip();
         $authenticationLog->waktu = Carbon::now();
         $authenticationLog->url = request()->url();
         $authenticationLog->keterangan = $description;
