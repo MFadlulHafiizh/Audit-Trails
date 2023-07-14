@@ -82,7 +82,7 @@ If you want to add reference value of your foreign key, add this to your models
         ]
     ];
 ```
-By default if you write this on your models it will replace foreign key id to foreign key value you set in this config. But if you still want to keep foreign key id and add foreign key value without replace it, you can add `hideForeignId(false)`
+By default if you write this on your models it will replace foreign key id to foreign key value you set in this array. But if you still want to keep foreign key id and add foreign key value without replace it, you can add `hideForeignId(false)`
 
 ```php
     $data = User::hideForeignId(false)->find(1);
