@@ -4,6 +4,7 @@ namespace Kuncen\Audittrails;
 use Carbon\Carbon;
 use App\Models\ActivityLog;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,15 +13,21 @@ trait LogTransaction
     /**
      * Handle model event
      */
-    protected static $custom_user_auth;
+    protected static $xx_custom_user_auth;
+    protected static $xx_hide_replaced_foreign;
     /**
      * jika event dilakukan sebelum adanya autentikasi maka secara opsional bisa mengisi withauth dengan cast id user
      */
     public static function withAuth($custom_user_auth=null){
-        self::$custom_user_auth = $custom_user_auth;
+        self::$xx_custom_user_auth = $custom_user_auth;
+        return new static();
+    }
+    public static function hideForeignId($hide_replaced_foreign=null){
+        self::$xx_hide_replaced_foreign = $hide_replaced_foreign;
         return new static();
     }
     public static function  booted(){
+        self::$xx_hide_replaced_foreign = true;
         static::saved(function ($model) {
             /** 
              * Event ketika update atau create menggunakan eloquent 
@@ -43,6 +50,20 @@ trait LogTransaction
         });
     }
 
+    public static function replaceForeignValue(Model $model, &$value){
+        if($model->setForeignValues){
+            foreach ($model->setForeignValues as $index => $foreignItems) {
+                if(!empty($value[$foreignItems['foreign']])){
+                    $target_values = DB::table($foreignItems['reference_table'])->select($foreignItems['target_value'])->where($foreignItems['reference_table_primary'] ?? 'id', $value[$foreignItems['foreign']])->first();
+                    $value[$foreignItems['target_value']] = $target_values->{$foreignItems['target_value']};
+                    if(self::$xx_hide_replaced_foreign == true){
+                        unset($value[$foreignItems['foreign']]);
+                    }
+                }
+            }
+        }
+    }
+
     public static function insertActivityLog($model, $modelPath, $action, $type=null){
         $newValues = null;
         $oldValues = null;
@@ -51,12 +72,14 @@ trait LogTransaction
         } elseif ($action === 'UPDATE') {
             $newValues = $model->getChanges();
         }
-
+        
         if ($action !== 'CREATE') {
             $oldValues = $model->getOriginal();
         }
+        self::replaceForeignValue($model, $oldValues);
+        self::replaceForeignValue($model, $newValues);
         $logTable = new ActivityLog;
-        $logTable->users_id = self::$custom_user_auth ?? @Auth::user()->id;
+        $logTable->users_id = self::$xx_custom_user_auth ?? @Auth::user()->id;
         $logTable->jenis_tindakan = $action;
         $logTable->ip_address = request()->ip();
         $logTable->waktu = Carbon::now();
