@@ -76,10 +76,14 @@ trait LogTransaction
         if ($action !== 'CREATE') {
             $oldValues = $model->getOriginal();
         }
+        $primaryUser = @Auth::user()->id;
+        if($model->getTable() == 'users'){
+            $primaryUser = @Auth::user()->{$model->getKeyName()};
+        }
         self::replaceForeignValue($model, $oldValues);
         self::replaceForeignValue($model, $newValues);
         $logTable = new ActivityLog;
-        $logTable->users_id = self::$xx_custom_user_auth ?? @Auth::user()->id;
+        $logTable->users_id = self::$xx_custom_user_auth ?? $primaryUser;
         $logTable->jenis_tindakan = $action;
         $logTable->ip_address = request()->ip();
         $logTable->waktu = Carbon::now();

@@ -21,9 +21,8 @@ class LogLoginListener{
         $user = $event->user;
         $ip = $this->request->ip();
         $userAgent = $this->request->userAgent();
-
         $authenticationLog = new ActivityLog;
-        $authenticationLog->users_id = $event->user->id;
+        $authenticationLog->users_id = $event->user->{$event->user->getKeyName()};
         $authenticationLog->jenis_tindakan = "AUTH LOGIN";
         $authenticationLog->ip_address =  $ip;
         $authenticationLog->waktu = Carbon::now();
