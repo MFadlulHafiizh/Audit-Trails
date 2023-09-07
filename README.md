@@ -8,7 +8,7 @@ Laravel activity log requires `laravel 8` or higher and `php 8.0+`
 composer require kuncen/audittrails:dev-main
 ```
 
-Then add `Kuncen\Audittrails\AudittrailsServiceProvider::class` to app/config
+Then add `Kuncen\Audittrails\AudittrailsServiceProvider::class` to config/app.php
 ```php
 
  'providers' => ServiceProvider::defaultProviders()->merge([
