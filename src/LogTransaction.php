@@ -15,11 +15,16 @@ trait LogTransaction
      */
     protected static $xx_custom_user_auth;
     protected static $xx_hide_replaced_foreign;
+    protected static $xx_disabled_audit;
     /**
      * jika event dilakukan sebelum adanya autentikasi maka secara opsional bisa mengisi withauth dengan cast id user
      */
     public static function withAuth($custom_user_auth=null){
         self::$xx_custom_user_auth = $custom_user_auth;
+        return new static();
+    }
+    public static function disableAudit($is_disable=false){
+        self::$xx_disabled_audit = $is_disable;
         return new static();
     }
     public static function hideForeignId($hide_replaced_foreign=null){
@@ -65,30 +70,32 @@ trait LogTransaction
     }
 
     public static function insertActivityLog($model, $modelPath, $action, $type=null){
-        $newValues = null;
-        $oldValues = null;
-        if ($action === 'CREATE') {
-            $newValues = $model->getAttributes();
-        } elseif ($action === 'UPDATE') {
-            $newValues = $model->getChanges();
+        if(!self::$xx_disabled_audit){
+            $newValues = null;
+            $oldValues = null;
+            if ($action === 'CREATE') {
+                $newValues = $model->getAttributes();
+            } elseif ($action === 'UPDATE') {
+                $newValues = $model->getChanges();
+            }
+            
+            if ($action !== 'CREATE') {
+                $oldValues = $model->getOriginal();
+            }
+            $primaryUser = @Auth::user()->{@Auth::user()->getKeyName()};
+            self::replaceForeignValue($model, $oldValues);
+            self::replaceForeignValue($model, $newValues);
+            $logTable = new ActivityLog;
+            $logTable->users_id = self::$xx_custom_user_auth ?? $primaryUser;
+            $logTable->jenis_tindakan = $action;
+            $logTable->ip_address = request()->ip();
+            $logTable->waktu = Carbon::now();
+            $logTable->url = request()->url();
+            $logTable->keterangan = $action . " data pada table ".$model->getTable()." (".$modelPath.")";
+            $logTable->user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $logTable->old_values = !empty($oldValues) ? json_encode($oldValues) : null;
+            $logTable->new_values = !empty($newValues) ? json_encode($newValues) : null;
+            $logTable->save();
         }
-        
-        if ($action !== 'CREATE') {
-            $oldValues = $model->getOriginal();
-        }
-        $primaryUser = @Auth::user()->{Auth::user()->getKeyName()};
-        self::replaceForeignValue($model, $oldValues);
-        self::replaceForeignValue($model, $newValues);
-        $logTable = new ActivityLog;
-        $logTable->users_id = self::$xx_custom_user_auth ?? $primaryUser;
-        $logTable->jenis_tindakan = $action;
-        $logTable->ip_address = request()->ip();
-        $logTable->waktu = Carbon::now();
-        $logTable->url = request()->url();
-        $logTable->keterangan = $action . " data pada table ".$model->getTable()." (".$modelPath.")";
-        $logTable->user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $logTable->old_values = !empty($oldValues) ? json_encode($oldValues) : null;
-        $logTable->new_values = !empty($newValues) ? json_encode($newValues) : null;
-        $logTable->save();
     }
 }

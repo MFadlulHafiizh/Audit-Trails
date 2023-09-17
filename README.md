@@ -104,6 +104,15 @@ $data->password = bcrypt("examplepassword");
 $data->update();
 ```
 
+Disable logging for some function
+```php
+$data = User::disableAudit(true)->find(1);
+$data->name = "Dummy Example";
+$data->email = "dummy@gmail.com";
+$data->password = bcrypt("examplepassword");
+$data->update();
+```
+
 If you want all transactional in your application to be recorded as entering a menu or page that another than action to save(), update(), delete() login and logout. You can add `setActivityLog()` helper to the function you made
 
 ```php
