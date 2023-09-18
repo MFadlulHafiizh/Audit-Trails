@@ -2,7 +2,7 @@
 
 ## Installation
 
-Laravel activity log requires `laravel 7` or higher and `php 7.4+`
+Laravel activity log requires `laravel 7` or higher and `php 7.3+`
 
 ```
 composer require kuncen/audittrails
