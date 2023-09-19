@@ -92,7 +92,7 @@ trait LogTransaction
             $logTable->waktu = Carbon::now();
             $logTable->url = request()->url();
             $logTable->keterangan = $action . " data pada table ".$model->getTable()." (".$modelPath.")";
-            $logTable->user_agent = @$request->header('user-agent');
+            $logTable->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
             $logTable->old_values = !empty($oldValues) ? json_encode($oldValues) : null;
             $logTable->new_values = !empty($newValues) ? json_encode($newValues) : null;
             $logTable->save();
