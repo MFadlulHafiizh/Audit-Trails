@@ -82,7 +82,7 @@ trait LogTransaction
             if ($action !== 'CREATE') {
                 $oldValues = $model->getOriginal();
             }
-            $primaryUser = @Auth::user()->{@Auth::user()->getKeyName()};
+            $primaryUser = @Auth::user()->{@$model->getKeyName()};
             self::replaceForeignValue($model, $oldValues);
             self::replaceForeignValue($model, $newValues);
             $logTable = new ActivityLog;
