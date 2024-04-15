@@ -60,7 +60,12 @@ trait LogTransaction
             foreach ($model->setForeignValues as $index => $foreignItems) {
                 if(!empty($value[$foreignItems['foreign']])){
                     $target_values = DB::table($foreignItems['reference_table'])->select($foreignItems['target_value'])->where($foreignItems['reference_table_primary'] ?? 'id', $value[$foreignItems['foreign']])->first();
-                    $value[$foreignItems['target_value']] = $target_values->{$foreignItems['target_value']};
+                    if(Str::contains($foreignItems['target_value'], " as ")) {
+                        $arrayString = explode(" as ",$foreignItems['target_value']);
+                        $value[$arrayString[1]] = $target_values->{$arrayString[1]};
+                    } else {
+                        $value[$foreignItems['target_value']] = $target_values->{$foreignItems['target_value']};
+                    }
                     if(self::$xx_hide_replaced_foreign == true){
                         unset($value[$foreignItems['foreign']]);
                     }
