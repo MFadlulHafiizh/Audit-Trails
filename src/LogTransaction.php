@@ -93,6 +93,32 @@ trait LogTransaction
             }
             self::replaceForeignValue($model, $oldValues);
             self::replaceForeignValue($model, $newValues);
+            if(isset($oldValues['created_at'])){
+                $oldValues['created_at'] = Carbon::parse($oldValues['created_at'])->format($model->logDateTimeFormat ?? 'd-m-Y H:i:s');
+            }
+            if(isset($oldValues['updated_at'])){
+                $oldValues['updated_at'] = Carbon::parse($oldValues['updated_at'])->format($model->logDateTimeFormat ?? 'd-m-Y H:i:s');
+            }
+            if(isset($newValues['created_at'])){
+                $newValues['created_at'] = Carbon::parse($newValues['created_at'])->format($model->logDateTimeFormat ?? 'd-m-Y H:i:s');
+            }
+            if(isset($newValues['updated_at'])){
+                $newValues['updated_at'] = Carbon::parse($newValues['updated_at'])->format($model->logDateTimeFormat ?? 'd-m-Y H:i:s');
+            }
+            if($model->logPassword != true){
+                if(isset($oldValues['password'])){
+                    $oldValues['password'] = "***";
+                }
+                if(isset($newValues['password'])){
+                    $newValues['password'] = "***";
+                }
+            }
+            if($model->dateTimeColumn){
+                foreach ($model->dateTimeColumn as $key => $value) {
+                    if(isset($newValues[$value['column_name']])) $newValues[$value['column_name']] = Carbon::parse($newValues[$value['column_name']])->format($value['format'] ?? 'd-m-Y H:i:s');
+                    if(isset($oldValues[$value['column_name']])) $oldValues[$value['column_name']] = Carbon::parse($oldValues[$value['column_name']])->format($value['format'] ?? 'd-m-Y H:i:s');
+                }
+            }
             $logTable = new ActivityLog;
             $logTable->users_id = self::$xx_custom_user_auth ?? $primaryUser;
             $logTable->jenis_tindakan = $action;
