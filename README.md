@@ -2,7 +2,7 @@
 
 ## Installation
 
-Laravel activity log requires `laravel 7` or higher and `php 7.3+`
+Laravel activity log requires `laravel 8` or higher and `php 8.0+`
 
 ```
 composer require kuncen/audittrails
@@ -42,6 +42,51 @@ After that activity log will create the table on your application to store trans
 php artisan migrate
 ```
 
+## New V2 Features
+### Dynamic reference values
+you can easily customize old and new values using transformAudit function on your models
+```php
+public function transformAudit(array $data): array{
+    if(Arr::has($data, 'new_values.car_id')){
+        $data['old_values']['car_detail'] = Car::select(...)->where('id', $this->getOriginal('car_id'))->first();
+        $data['new_values']['car_detail'] = Car::find($this->getOriginal('car_id'));
+    }
+    return $data;
+}
+
+```
+
+### Grouping multiple logs using batch
+You can now group multiple logs, whether related to the same model or not when an action is performed simultaneously within a function.
+```php
+$uniqId = uniqid();
+$user = User::setBatchAudit($uniqId)->find(2);
+$user->name = "Example User";
+$user->email = "dummy4@gmail.com";
+$user->password = "test";
+$user->role_id = 1;
+$user->save();
+
+for ($i=0; $i < 3; $i++) { 
+    $car = new Car;
+    $car->setBatchAudit($uniqId);
+    $car->user_id = $user->id;
+    $car->car_name = "Example Car " . $i;
+    $car->save();
+}
+```
+
+### Add description log
+Adding some description using setDescAudit()
+```php
+$uniqId = uniqid();
+$data = User::setBatchAudit($uniqId)->setDescAudit('Some description')->find(2);
+$data->name = "Example User";
+$data->email = "dummy@gmail.com";
+$data->password = bcrypt("123");
+$data->role_id = 1;
+$data->save();
+```
 
 ## Usage
 
