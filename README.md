@@ -62,7 +62,7 @@ You can now group multiple logs, whether related to the same model or not when a
 $uniqId = uniqid();
 $user = User::setBatchAudit($uniqId)->find(2);
 $user->name = "Example User";
-$user->email = "dummy4@gmail.com";
+$user->email = "dummy@gmail.com";
 $user->password = "test";
 $user->role_id = 1;
 $user->save();
