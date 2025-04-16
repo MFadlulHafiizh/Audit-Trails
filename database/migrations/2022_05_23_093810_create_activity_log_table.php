@@ -20,6 +20,7 @@ class CreateActivityLogTable extends Migration
             $table->string('ip_address');
             $table->timestamp('waktu');
             $table->text('url');
+            $table->text('batch')->nullable();
             $table->text('keterangan')->nullable();
             $table->text('user_agent')->nullable();
             $table->text('old_values')->nullable();
