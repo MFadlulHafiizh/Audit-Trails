@@ -17,6 +17,7 @@ trait LogTransaction
     protected static $xx_hide_replaced_foreign;
     protected static $xx_disabled_audit;
     protected static $xx_batch_data;
+    protected static $xx_keterangan_audit;
     /**
      * jika event dilakukan sebelum adanya autentikasi maka secara opsional bisa mengisi withauth dengan cast id user
      */
@@ -34,6 +35,10 @@ trait LogTransaction
     }
     public static function setBatchAudit($unique_batch){
         self::$xx_batch_data = $unique_batch;
+        return new static();
+    }
+    public static function setDescAudit($keterangan_audit){
+        self::$xx_keterangan_audit = $keterangan_audit;
         return new static();
     }
     public static function  booted(){
@@ -151,7 +156,8 @@ trait LogTransaction
             $logTable->ip_address = request()->ip();
             $logTable->waktu = Carbon::now();
             $logTable->url = request()->url();
-            $logTable->keterangan = $action . " data pada table ".$model->getTable()." (".$modelPath.")";
+            $logTable->keterangan = self::$xx_keterangan_audit ?? null;
+            $logTable->model_path = $modelPath;
             $logTable->batch = self::$xx_batch_data ?? null;
             $logTable->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
             $logTable->old_values = !empty($oldValues) ? json_encode($oldValues) : null;

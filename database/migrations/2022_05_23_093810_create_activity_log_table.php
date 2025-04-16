@@ -21,6 +21,7 @@ class CreateActivityLogTable extends Migration
             $table->timestamp('waktu');
             $table->text('url');
             $table->text('batch')->nullable();
+            $table->text('model_path');
             $table->text('keterangan')->nullable();
             $table->text('user_agent')->nullable();
             $table->text('old_values')->nullable();
