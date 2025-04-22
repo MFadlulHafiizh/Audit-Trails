@@ -21,7 +21,7 @@ if (! function_exists('setActivityLog')) {
         $authenticationLog->waktu = Carbon::now();
         $authenticationLog->url = request()->url();
         $authenticationLog->batch = $batch;
-        $authenticationLog->model_path = $model_path;
+        $authenticationLog->model_path = $modelPath;
         $authenticationLog->keterangan = $description;
         $authenticationLog->user_agent = $_SERVER['HTTP_USER_AGENT'];
         $authenticationLog->old_values = !empty($customOldValues) ? json_encode($customOldValues) : null;
