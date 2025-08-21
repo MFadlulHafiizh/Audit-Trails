@@ -41,7 +41,7 @@ trait LogTransaction
         self::$xx_keterangan_audit = $keterangan_audit;
         return new static();
     }
-    public static function  booted(){
+    public static function  bootLogTransaction(){
         self::$xx_hide_replaced_foreign = true;
         static::saved(function ($model) {
             /** 
