@@ -55,13 +55,13 @@ class Car extends Models
     ...
     ...
 
-    protected $useUserIdentityForTransaction = true <-- add this variable
+    protected $useUserIdentityForTransaction = true <-- add this
 }
 
 ```
 
 ### Logging for retrieve data
-If you want to log all data retrieval operations, including `get()`, `find()`, or `all()`, set allowLogForRetrieve = true on your models.
+If you want to log all data retrieval operations, including `get()`, `find()`, or `all()`, set `allowLogForRetrieve = true` on your models.
 
 
 ### Dynamic reference values

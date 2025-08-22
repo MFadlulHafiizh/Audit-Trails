@@ -53,7 +53,7 @@ trait LogTransaction
 
             App::terminating(function () {
                 if (!empty(self::$xx_retrieved_buffer)) {
-                    setActivityLog("", auth()->user()->id ?? null, "GET", self::$xx_retrieved_buffer);
+                    setActivityLog("", auth()->user()->id ?? null, "GET", [],self::$xx_retrieved_buffer);
                     self::$xx_retrieved_buffer = [];
                 }
             });
@@ -67,7 +67,8 @@ trait LogTransaction
                 $model->updated_by = auth()->user()->id;
             });
             static::deleting(function($model){
-                $model->delete_by = auth()->user()->id;
+                $model->deleted_by = auth()->user()->id;
+                $model->saveQuietly();
             }); 
         }
         static::saved(function ($model) {
@@ -122,14 +123,13 @@ trait LogTransaction
             if ($action === 'CREATE') {
                 $newValues = $model->getAttributes();
             } elseif ($action === 'UPDATE') {
+                $oldValues = $model->getOriginal();
                 $newValues = $model->getChanges();
-            }
-            if ($action !== 'CREATE') {
-                $rawValues = $model->getOriginal();
-                $oldValues = [];
-                foreach ($model->getChanges() as $key => $value) {
-                    $oldValues[$key] = $rawValues[$key];
-                }
+            } elseif($action === 'DELETE'){
+                $oldValues = $model->getOriginal();
+            } else{
+                $oldValues = $model->getOriginal();
+                $newValues = $model->getChanges();
             }
             $primaryUser = null;
             if(Auth::check()){
