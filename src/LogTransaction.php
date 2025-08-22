@@ -18,6 +18,7 @@ trait LogTransaction
     protected static $xx_disabled_audit;
     protected static $xx_batch_data;
     protected static $xx_keterangan_audit;
+    protected static $xx_retrieved_buffer = [];
     /**
      * jika event dilakukan sebelum adanya autentikasi maka secara opsional bisa mengisi withauth dengan cast id user
      */
@@ -43,6 +44,17 @@ trait LogTransaction
     }
     public static function  bootLogTransaction(){
         self::$xx_hide_replaced_foreign = true;
+        static::retrieved(function ($model) {
+            if($model->allowLogForRetrieve){
+                self::$xx_retrieved_buffer[] = $model->toArray();
+            }
+        });
+        if (!empty(self::$xx_retrieved_buffer)) {
+            App::terminating(function () {
+                setActivityLog("", auth()->user()->id ?? null, "GET", self::$xx_retrieved_buffer);
+                self::$xx_retrieved_buffer = [];
+            });
+        }
         static::creating(function($model){
             if($model->useUserIdentityForTransaction){
                 $model->created_by = auth()->user()->id;
