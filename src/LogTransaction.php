@@ -43,21 +43,30 @@ trait LogTransaction
     }
     public static function  bootLogTransaction(){
         self::$xx_hide_replaced_foreign = true;
+        static::creating(function($model){
+            if($model->useUserIdentityForTransaction){
+                $model->created_by = auth()->user()->id;
+            }
+        });
+        static::updating(function($model){
+            if($model->useUserIdentityForTransaction){
+                $model->updated_by = auth()->user()->id;
+            }
+        });
+        static::deleting(function($model){
+            if($model->useUserIdentityForTransaction){
+                $model->delete_by = auth()->user()->id;
+            }
+        }); 
         static::saved(function ($model) {
             /** 
              * Event ketika update atau create menggunakan eloquent 
             */
             if ($model->wasRecentlyCreated) {
-                if($model->useUserIdentityForTransaction){
-                    $model->created_by = Auth::user()->id;
-                }
                 static::insertActivityLog($model, static::class, "CREATE");
             } else {
                 if (!$model->getChanges()) {
                     return;
-                }
-                if($model->useUserIdentityForTransaction){
-                    $model->updated_by = Auth::user()->id;
                 }
                 static::insertActivityLog($model, static::class, "UPDATE");
             }
@@ -67,9 +76,6 @@ trait LogTransaction
          * Event ketika delete
          */
         static::deleted(function (Model $model) {
-            if($model->useUserIdentityForTransaction){
-                $model->deleted_by = Auth::user()->id;
-            }
             static::insertActivityLog($model, static::class, "DELETE");
         });
     }

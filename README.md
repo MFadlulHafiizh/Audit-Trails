@@ -43,6 +43,24 @@ php artisan migrate
 ```
 
 ## New V2 Features
+### Set transaction identitiy
+if your table has `created_by`, `updated_by` and `deleted_by` columns, these options will be filled automatically. Add the following variable to your model to enable this feature:
+
+```php
+class Car extends Models
+{
+    use LogTransaction;
+
+    protected $table = 'car';
+    ...
+    ...
+
+    protected $useUserIdentityForTransaction = true <-- add this variable
+}
+
+```
+
+
 ### Dynamic reference values
 you can easily customize old and new values using transformAudit function on your models
 ```php
