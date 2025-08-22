@@ -53,7 +53,7 @@ trait LogTransaction
 
             App::terminating(function () {
                 if (!empty(self::$xx_retrieved_buffer)) {
-                    setActivityLog("", auth()->user()->id ?? null, "GET", [],self::$xx_retrieved_buffer);
+                    setActivityLog("", @auth()->user()->id ?? null, "GET", [],self::$xx_retrieved_buffer);
                     self::$xx_retrieved_buffer = [];
                 }
             });
@@ -61,13 +61,13 @@ trait LogTransaction
 
         if ((new $runningModel)->useUserIdentityForTransaction) {
             static::creating(function($model){
-                $model->created_by = auth()->user()->id;
+                $model->created_by = @auth()->user()->id ?? null;
             });
             static::updating(function($model){
-                $model->updated_by = auth()->user()->id;
+                $model->updated_by = @auth()->user()->id ?? null;
             });
             static::deleting(function($model){
-                $model->deleted_by = auth()->user()->id;
+                $model->deleted_by = @auth()->user()->id ?? null;
                 $model->saveQuietly();
             }); 
         }
