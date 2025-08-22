@@ -60,6 +60,9 @@ class Car extends Models
 
 ```
 
+### Logging for retrieve data
+If you want to log all data retrieval operations, including `get()`, `find()`, or `all()`, set allowLogForRetrieve = true on your models.
+
 
 ### Dynamic reference values
 you can easily customize old and new values using transformAudit function on your models
