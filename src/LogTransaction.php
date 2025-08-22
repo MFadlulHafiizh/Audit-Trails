@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
