@@ -44,32 +44,31 @@ trait LogTransaction
     }
     public static function  bootLogTransaction(){
         self::$xx_hide_replaced_foreign = true;
-        static::retrieved(function ($model) {
-            if($model->allowLogForRetrieve){
+        $runningModel = static::class;
+        if ((new $runningModel)->allowLogForRetrieve) {
+            static::retrieved(function ($model) {
                 self::$xx_retrieved_buffer[] = $model->toArray();
-            }
-        });
-        if (!empty(self::$xx_retrieved_buffer)) {
+            });
+
             App::terminating(function () {
-                setActivityLog("", auth()->user()->id ?? null, "GET", self::$xx_retrieved_buffer);
-                self::$xx_retrieved_buffer = [];
+                if (!empty(self::$xx_retrieved_buffer)) {
+                    setActivityLog("", auth()->user()->id ?? null, "GET", self::$xx_retrieved_buffer);
+                    self::$xx_retrieved_buffer = [];
+                }
             });
         }
-        static::creating(function($model){
-            if($model->useUserIdentityForTransaction){
+
+        if ((new $runningModel)->useUserIdentityForTransaction) {
+            static::creating(function($model){
                 $model->created_by = auth()->user()->id;
-            }
-        });
-        static::updating(function($model){
-            if($model->useUserIdentityForTransaction){
+            });
+            static::updating(function($model){
                 $model->updated_by = auth()->user()->id;
-            }
-        });
-        static::deleting(function($model){
-            if($model->useUserIdentityForTransaction){
+            });
+            static::deleting(function($model){
                 $model->delete_by = auth()->user()->id;
-            }
-        }); 
+            }); 
+        }
         static::saved(function ($model) {
             /** 
              * Event ketika update atau create menggunakan eloquent 
