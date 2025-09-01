@@ -1,4 +1,4 @@
-# Laravel Activity Log Documentation
+# Laravel Audit Trail Package
 
 ## Installation
 
