@@ -131,6 +131,12 @@ trait LogTransaction
                 $oldValues = $model->getOriginal();
                 $newValues = $model->getChanges();
             }
+            $defaultKet = null;
+            if (config('app.locale') == 'id'){
+                $defaultKet = strtolower($action) . " data dari tabel " . $model->getTable();
+            }else{
+                $defaultKet = strtolower($action) . " from " . $model->getTable() . " table";
+            }
             $primaryUser = null;
             if(Auth::check()){
                 $primaryUser = @Auth::user()->{@Auth::user()->getKeyName()};
@@ -174,7 +180,7 @@ trait LogTransaction
             $logTable->ip_address = request()->ip();
             $logTable->waktu = Carbon::now();
             $logTable->url = request()->url();
-            $logTable->keterangan = self::$xx_keterangan_audit ?? null;
+            $logTable->keterangan = self::$xx_keterangan_audit ?? $defaultKet;
             $logTable->model_path = $modelPath;
             $logTable->batch = self::$xx_batch_data ?? null;
             $logTable->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
